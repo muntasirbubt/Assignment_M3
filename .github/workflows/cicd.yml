@@ -39,9 +39,14 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          pm2 delete "Muntasir_demo" || true
+          ls -a
+          pm2 status
+          # pm2 restart all
+          pm2 delete "Node Js Application" || true
 
-          pm2 start "npm start" --name="Muntasir_demo"
+          pm2 start "npm start" --name="Node Js Application"
+          
+          pm2 save
 
  
 
