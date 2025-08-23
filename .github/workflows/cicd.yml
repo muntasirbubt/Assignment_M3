@@ -26,7 +26,7 @@ jobs:
 
 
   Deploy:
-    runs-on: muntasir_k
+    runs-on: ubuntu-latest
     needs: Testing
     steps:
       - name: Checkout code
