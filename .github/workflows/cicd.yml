@@ -22,8 +22,13 @@ jobs:
         run: npm install
 
       - name: Run Tests
-        run: npm run check
+        run: npm run check -- --outputFile=test-results.json --json
 
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results.json
 
   Deploy:
     runs-on: muntasir_k
@@ -31,6 +36,15 @@ jobs:
     steps:
       - name: Checkout codes
         uses: actions/checkout@v2
+
+      - name: Download Test Results
+        uses: actions/download-artifact@v3
+        with:
+          name: test-results
+          path: ./artifacts
+
+      - name: Show Test Results
+        run: cat ./artifacts/test-results.json
 
       - name: Install Dependencies
         run: npm install
