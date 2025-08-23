@@ -26,7 +26,7 @@ jobs:
 
 
   Deploy:
-    runs-on: self-hosted
+    runs-on: muntasir_k
     needs: Testing
     steps:
       - name: Checkout code
@@ -39,9 +39,9 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          pm2 delete "Server" || true
+          pm2 delete "Muntasir_demo" || true
 
-          pm2 start "npm start" --name="Server"
+          pm2 start "npm start" --name="Muntasir_demo"
 
  
 
