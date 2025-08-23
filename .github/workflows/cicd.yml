@@ -40,13 +40,13 @@ jobs:
       - name: Deploy to Server
         run: |
           ls -a
-          pm2 status
+          #pm2 status
           # pm2 restart all
-          pm2 delete "Node Js Application" || true
+          #pm2 delete "Node Js Application" || true
 
-          pm2 start "npm start" --name="Node Js Application"
+          #pm2 start "npm start" --name="Node Js Application"
           
-          pm2 save
+          #pm2 save
 
  
 
