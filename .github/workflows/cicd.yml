@@ -26,7 +26,7 @@ jobs:
 
 
   Deploy:
-    runs-on: self-hosted
+    runs-on: kamal_t
     needs: Testing
     steps:
       - name: Checkout codes
@@ -42,8 +42,8 @@ jobs:
           ls -a
           pm2 status
           # pm2 restart all
-          pm2 delete "Node Js Application" || true
+          pm2 delete "NodeJsStart" || true
 
-          pm2 start "npm start" --name="Node Js Application"
+          pm2 start "npm start" --name="NodeJsStart"
           
           pm2 save
