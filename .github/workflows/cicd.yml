@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-
 jobs:
   Testing:
     runs-on: ubuntu-latest
@@ -24,6 +23,15 @@ jobs:
       - name: Run Tests
         run: npm run check
 
+      - name: Build App
+        run: npm run build
+
+      - name: Upload Artifact (Build Files)
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: build/   # React/Vue হলে সাধারণত build ফোল্ডার, Node হলে dist
+
 
   Deploy:
     runs-on: kamal_t
@@ -35,15 +43,16 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: ./build
 
       - name: Deploy to Server
         run: |
-          ls -a
+          ls -a ./build
           pm2 status
-          # pm2 restart all
           pm2 delete "NodeJsStart" || true
-
           pm2 start "npm start" --name="NodeJsStart"
-          
           pm2 save
