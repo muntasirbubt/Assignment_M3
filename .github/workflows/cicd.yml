@@ -5,15 +5,16 @@ on:
     branches:
       - main
 
+
 jobs:
   Testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: '22'
 
@@ -21,50 +22,28 @@ jobs:
         run: npm install
 
       - name: Run Tests
-        run: |
-          mkdir -p test-results
-          npm run check -- --outputFile=test-results/results.json --json || echo "Tests failed, continuing..."
+        run: npm run check
 
-      - name: Debug Test Output
-        run: |
-          echo "Listing test-results directory:"
-          ls -la test-results/
-          echo "Contents of results.json (if exists):"
-          cat test-results/results.json || echo "File not found"
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: test-results/
-          if-no-files-found: warn   # avoids failing if file doesn't exist
 
   Deploy:
-    runs-on: ubuntu-latest   # safer than self-hosted for artifact download test
+    runs-on: muntasir_k
     needs: Testing
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download Test Results
-        uses: actions/download-artifact@v4
-        with:
-          name: test-results
-          path: ./test-results
-
-      - name: Show Test Results
-        run: |
-          echo "Listing downloaded test-results directory:"
-          ls -la ./test-results/
-          echo "Contents of results.json (if exists):"
-          cat ./test-results/results.json || echo "File not found"
+      - name: Checkout codes
+        uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: npm install --production
+        run: npm install
+
+
 
       - name: Deploy to Server
         run: |
-          pm2 delete "Node Js Application" || true
-          pm2 start "npm start" --name="Node Js Application"
-          pm2 save
+          ls -a
           pm2 status
+          # pm2 restart all
+          pm2 delete "Node Js Application" || true
+
+          pm2 start "npm start" --name="Node Js Application"
+          
+          pm2 save
