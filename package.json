@@ -3,10 +3,10 @@
   "version": "1.0.0",
 
   "scripts": {
-    "start": "node src/server.js",
-    "check": "mocha test/**/*.test.js",
-    "dev": "node src/server.js"
-  },
+  "start": "node src/server.js",
+  "check": "mocha test/**/*.test.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml",
+  "dev": "node src/server.js"
+},
   "dependencies": {
     "express": "^4.18.3"
   },

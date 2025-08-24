@@ -23,35 +23,34 @@ jobs:
       - name: Run Tests
         run: npm run check
 
-      # ✅ এখানে build এর বদলে পুরো কোড বা dist artifact এ save করবো
-      - name: Upload Project Files
+      - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
-          name: project-files
-          path: |
-            ./
-            !node_modules/
-            !.git/
-  
+          name: test-results
+          path: test-results.xml
+
 
   Deploy:
-    runs-on: kamal_t
-    needs: Testing
+    runs-on: kamal_t   # self-hosted runner
+    needs: Testing     # depends on test job
     steps:
-      - name: Download Project Files
+      - name: Download Test Results
         uses: actions/download-artifact@v4
         with:
-          name: project-files
-          path: ./app
+          name: test-results
+          path: ./results
 
-      - name: Install Dependencies on Server
-        run: |
-          cd ./app
-          npm install --production
+      - name: Show Test Result Content
+        run: cat ./results/test-results.xml
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm install
 
       - name: Deploy to Server
         run: |
-          cd ./app
           pm2 delete "NodeJsStart" || true
           pm2 start "npm start" --name="NodeJsStart"
           pm2 save
