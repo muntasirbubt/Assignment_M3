@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Testing:
+  Test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,7 +31,7 @@ jobs:
 
   Deploy:
     runs-on: kamal_t  # self-hosted runner
-    needs: Testing     # deploy will only run if tests pass
+    needs: Test     # deploy will only run if tests pass
     steps:
       - name: Download Test Results Artifact
         uses: actions/download-artifact@v4
