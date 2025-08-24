@@ -23,36 +23,35 @@ jobs:
       - name: Run Tests
         run: npm run check
 
-      - name: Build App
-        run: npm run build
-
-      - name: Upload Artifact (Build Files)
+      # ✅ এখানে build এর বদলে পুরো কোড বা dist artifact এ save করবো
+      - name: Upload Project Files
         uses: actions/upload-artifact@v4
         with:
-          name: build-files
-          path: build/   # React/Vue হলে সাধারণত build ফোল্ডার, Node হলে dist
-
+          name: project-files
+          path: |
+            ./
+            !node_modules/
+            !.git/
+  
 
   Deploy:
     runs-on: kamal_t
     needs: Testing
     steps:
-      - name: Checkout codes
-        uses: actions/checkout@v2
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Download Artifact
+      - name: Download Project Files
         uses: actions/download-artifact@v4
         with:
-          name: build-files
-          path: ./build
+          name: project-files
+          path: ./app
+
+      - name: Install Dependencies on Server
+        run: |
+          cd ./app
+          npm install --production
 
       - name: Deploy to Server
         run: |
-          ls -a ./build
-          pm2 status
+          cd ./app
           pm2 delete "NodeJsStart" || true
           pm2 start "npm start" --name="NodeJsStart"
           pm2 save
